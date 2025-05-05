@@ -33,7 +33,7 @@ class User(UserMixin):
     
     def get_balance(self):
         user_data = users_collection.find_one({"_id": ObjectId(self.id)})
-        return user_data.get('balance', 0.0)
+        return user_data.get('balance', 0.0) if user_data else 0.0
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -290,6 +290,7 @@ def exchange_graph():
         flash(f"Error generating exchange rate graph: {str(e)}", 'danger')
         return redirect(url_for('exchange_rates'))
 
-# Remove the development server run code for Vercel deployment
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5050, debug=True)
+# Optional: Add health check endpoint for Vercel
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "ok"})
