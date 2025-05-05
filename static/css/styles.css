@@ -1,0 +1,35 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.navbar {
+    background-color: #00d1b2;
+}
+
+.navbar-brand .navbar-item {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+}
+
+.title {
+    color: #00d1b2;
+}
+
+.box {
+    margin-bottom: 20px;
+}
+
+.button.is-link {
+    background-color: #00d1b2;
+    border-color: #00d1b2;
+}
+
+.button.is-link:hover {
+    background-color: #00b89b;
+    border-color: #00b89b;
+}
