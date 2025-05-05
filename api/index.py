@@ -1,8 +1,8 @@
 from flask import Flask
-import app as flask_app
+from app import app as flask_app
 
 # This exposes the Flask application for Vercel to use
-app = flask_app.app
+app = flask_app
 
 # Make the app available to the Vercel handler
 if __name__ == '__main__':
