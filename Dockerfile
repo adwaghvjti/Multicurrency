@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5050
 
 # Start the Flask app
-CMD ["python", "app.py"]
+CMD ["python", "api/index.py"]
