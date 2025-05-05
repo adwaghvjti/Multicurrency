@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <script>
+        var options = {
+            "key": "{{ key_id }}", // Enter the Key ID generated from the Dashboard
+            "amount": "{{ amount * 100 }}", // Amount is in currency subunits. Default currency is INR. Hence, 100 refers to 100 paise
+            "currency": "INR",
+            "name": "E-Wallet",
+            "description": "Deposit to E-Wallet",
+            "order_id": "{{ order_id }}", // Pass the order ID
+            "handler": function (response){
+                // After payment success, send data to backend
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/wallet/payment_success';
+
+                var razorpay_payment_id = document.createElement('input');
+                razorpay_payment_id.name = 'razorpay_payment_id';
+                razorpay_payment_id.value = response.razorpay_payment_id;
+                form.appendChild(razorpay_payment_id);
+
+                var razorpay_order_id = document.createElement('input');
+                razorpay_order_id.name = 'razorpay_order_id';
+                razorpay_order_id.value = response.razorpay_order_id;
+                form.appendChild(razorpay_order_id);
+
+                var amount_input = document.createElement('input');
+                amount_input.name = 'amount';
+                amount_input.value = '{{ amount }}';
+                form.appendChild(amount_input);
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "prefill": {
+                "name": "{{ current_user.email }}",
+                "email": "{{ current_user.email }}",
+                "contact": "{{ current_user.phone }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+    </script>
+</body>
+</html>

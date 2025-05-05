@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Wallet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">E-Wallet</a>
+        </div>
+        <div class="navbar-end">
+            {% if current_user.is_authenticated %}
+                <a class="navbar-item" href="{{ url_for('wallet') }}">Wallet</a>
+                <a class="navbar-item" href="{{ url_for('exchange_rates') }}">Exchange Rates</a>
+                <a class="navbar-item" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="navbar-item" href="{{ url_for('login') }}">Login</a>
+                <a class="navbar-item" href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">E-Wallet</h1>
+            <h2 class="subtitle">Balance: ₹{{ balance }}</h2>
+            
+            <div class="columns">
+                <div class="column">
+                    <div class="box">
+                        <h3 class="title is-4">Deposit Funds</h3>
+                        <form method="POST" action="{{ url_for('deposit') }}">
+                            <div class="field">
+                                <label class="label">Deposit Amount</label>
+                                <div class="control">
+                                    <input class="input" type="number" name="amount" step="0.01" placeholder="Enter amount to deposit">
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link" type="submit">Deposit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="box">
+                        <h3 class="title is-4">Withdraw Funds</h3>
+                        <form method="POST" action="{{ url_for('withdraw') }}">
+                            <div class="field">
+                                <label class="label">Withdraw Amount</label>
+                                <div class="control">
+                                    <input class="input" type="number" name="amount" step="0.01" placeholder="Enter amount to withdraw">
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link" type="submit">Withdraw</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            {% if rates %}
+            <div class="box mt-4">
+                <h3 class="title is-4">Convert Currency</h3>
+                <form method="POST" action="{{ url_for('convert_currency') }}">
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Amount (INR)</label>
+                                <div class="control">
+                                    <input class="input" type="number" name="convert_amount" step="0.01" placeholder="Enter amount to convert" max="{{ balance }}">
+                                </div>
+                                <p class="help">Maximum amount: ₹{{ balance }}</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Target Currency</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="currency">
+                                            {% for currency, rate in rates.items() %}
+                                                {% if currency != 'INR' %}
+                                                <option value="{{ currency }}">{{ currency }} (Rate: {{ rate }})</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-narrow self-align-end">
+                            <div class="field">
+                                <label class="label">&nbsp;</label>
+                                <div class="control">
+                                    <button class="button is-info" type="submit">Convert</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="box mt-4">
+                <h3 class="title is-4">Current Exchange Rates (INR)</h3>
+                <table class="table is-fullwidth is-striped">
+                    <thead>
+                        <tr>
+                            <th>Currency</th>
+                            <th>Rate</th>
+                            <th>₹100 equals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for currency, rate in rates.items() %}
+                        {% if currency != 'INR' %}
+                        <tr>
+                            <td>{{ currency }}</td>
+                            <td>{{ rate }}</td>
+                            <td>{{ (100 / rate)|round(2) }} {{ currency }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <div class="has-text-centered mt-4">
+                    <a href="{{ url_for('exchange_rates') }}" class="button is-info">
+                        View Detailed Exchange Rates
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <br>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="notification is-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money and Currencies News</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">Money and Currencies News</a>
+        </div>
+        <div class="navbar-end">
+            {% if current_user.is_authenticated %}
+                <a class="navbar-item" href="{{ url_for('wallet') }}">Wallet</a>
+                <a class="navbar-item" href="{{ url_for('exchange_rates') }}">Exchange Rates</a>
+                <a class="navbar-item" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="navbar-item" href="{{ url_for('login') }}">Login</a>
+                <a class="navbar-item" href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Money and Currencies News</h1>
+            <form method="get" action="/">
+                <div class="field">
+                    <label class="label">Search</label>
+                    <div class="control">
+                        <input class="input" type="text" name="query" placeholder="Search for news...">
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-link" type="submit">Search</button>
+                </div>
+            </form>
+            <hr>
+            {% for article in articles %}
+            <div class="box">
+                <article class="media">
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ article.urlToImage }}" alt="News image">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>{{ article.title }}</strong> <br>
+                                {{ article.description }} <br>
+                                <small><a href="{{ article.url }}" target="_blank">Read more...</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+</html>

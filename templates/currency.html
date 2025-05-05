@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Exchange Rates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">Currency Exchange Rates</a>
+        </div>
+    </nav>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Currency Exchange Rates</h1>
+            <form method="get" action="/currency/graph">
+                <div class="field">
+                    <label class="label">Base Currency</label>
+                    <div class="control">
+                        <input class="input" type="text" name="base_currency" placeholder="Enter base currency (e.g., USD)">
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-link" type="submit">Get Graph</button>
+                </div>
+            </form>
+            <hr>
+            <div>
+                <img src="/currency/graph" alt="Currency Exchange Rates Graph">
+            </div>
+        </div>
+    </section>
+</body>
+</html>
