@@ -1,0 +1,8 @@
+Flask
+requests
+razorpay
+pymongo
+flask-bcrypt
+flask-login
+email-validator
+matplotlib
