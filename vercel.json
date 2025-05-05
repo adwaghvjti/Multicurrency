@@ -13,7 +13,6 @@
     }
   ],
   "env": {
-    "FLASK_ENV": "production",
-    "FLASK_APP": "api/index.py"
+    "PYTHONPATH": "."
   }
 }
