@@ -8,7 +8,6 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 from email_validator import validate_email, EmailNotValidError
 from razorpay_gateway import create_razorpay_order
 from config import NEWS_API_KEY, NEWS_API_URL, RAZORPAY_KEY_ID, EXCHANGE_API_URL, IMPORTANT_CURRENCIES, users_collection, transactions_collection
-import time
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -52,9 +51,13 @@ def home():
         'language': 'en',
         'sortBy': 'publishedAt'
     }
-    response = requests.get(NEWS_API_URL, params=params)
-    news_data = response.json()
-
+    
+    try:
+        response = requests.get(NEWS_API_URL, params=params)
+        news_data = response.json()
+    except Exception:
+        news_data = {"articles": []}
+        
     return render_template('home.html', articles=news_data.get('articles', []))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -233,7 +236,7 @@ def payment_success():
         }
         transactions_collection.insert_one(transaction)
         flash(f'Successfully deposited ₹{amount:.2f}', 'success')
-    except razorpay.errors.BadRequestError as e:
+    except Exception as e:
         flash(f'Payment verification failed: {str(e)}', 'danger')
     
     return redirect(url_for('wallet'))
@@ -287,5 +290,6 @@ def exchange_graph():
         flash(f"Error generating exchange rate graph: {str(e)}", 'danger')
         return redirect(url_for('exchange_rates'))
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5050, debug=True)
+# Remove the development server run code for Vercel deployment
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=5050, debug=True)
