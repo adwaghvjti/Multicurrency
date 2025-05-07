@@ -122,7 +122,7 @@
                         <tr>
                             <td>{{ currency }}</td>
                             <td>{{ rate }}</td>
-                            <td>{{ (100 / rate)|round(2) }} {{ currency }}</td>
+                            <td>{{ (rate)|round(2) }} {{ currency }}</td>
                         </tr>
                         {% endif %}
                         {% endfor %}
