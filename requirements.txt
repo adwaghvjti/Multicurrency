@@ -7,3 +7,4 @@ flask-login
 email-validator
 matplotlib
 gunicorn
+setuptools
