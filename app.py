@@ -134,7 +134,7 @@ def wallet():
 @app.route('/wallet/deposit', methods=['POST'])
 @login_required
 def deposit():
-    amount = request.form.get('amount', type=float)
+    amount = request.form.get('deposit-amount', type=float)
     if amount and amount > 0:
         # Create Razorpay order
         order = create_razorpay_order(amount)
@@ -147,7 +147,7 @@ def deposit():
 @app.route('/wallet/withdraw', methods=['POST'])
 @login_required
 def withdraw():
-    amount = request.form.get('amount', type=float)
+    amount = request.form.get('withdraw-amount', type=float)
     if amount and 0 < amount <= current_user.balance:
         new_balance = current_user.balance - amount
         users_collection.update_one({"_id": ObjectId(current_user.id)}, {"$set": {"balance": new_balance}})
